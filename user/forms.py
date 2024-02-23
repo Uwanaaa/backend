@@ -11,7 +11,7 @@ class CreateUser(UserCreationForm):
      mobile_number = forms.CharField()
      class Meta:
         model = UserModel
-        fields = ('first_name','last_name','email','password','mobile_number')
+        fields = ('first_name','last_name','email','mobile_number')
 
 # - Form to login a user
 class LoginUser(AuthenticationForm):

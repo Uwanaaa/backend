@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user'
+    'user',
+    'home'
 ]
 
 MIDDLEWARE = [
@@ -52,7 +53,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'dalensai.urls'
 
-#LOGIN_REDIRECT_URL = 'homepage'
+LOGIN_REDIRECT_URL = '/home'
 #LOGOUT_REDIRECT_URL = 'homepage'
 
 TEMPLATES = [
@@ -113,6 +114,9 @@ AUTHENTICATION_BACKENDS = [
     'user.backends.UserBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+#LOGIN_REDIRECT_URL = '/home'
+#LOGOUT_REDIRECT_URL = '/logout'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

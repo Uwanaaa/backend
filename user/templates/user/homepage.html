@@ -28,7 +28,7 @@
      {% endif %}
 
 
-     {% if request.path == 'logout' %}
+     {% if request.path == '/logout' %}
      {% csrf_token %}
      {% if messages %}
      {% for message in messages %}
