@@ -34,18 +34,20 @@ class ForgotPassword(PasswordResetForm):
 
 class SetupCamera(forms.Form):
     Choices = (
+        ('','Number of Cameras'),
         (1,'One'),
         (2,'Two'),
         (3,'Three'),
     )
-    amount_of_cameras = forms.ChoiceField(choices=Choices,attrs={'placeholder':'Amount of Cameras'})
-    ip_address_1 = forms.GenericIPAddressField(required=True,attrs={'placeholder':'IP address(Camera 1)'})
-    ip_address_2 = forms.GenericIPAddressField(attrs={'placeholder':'IP address(Camera 2)'})
-    ip_address_3 = forms.GenericIPAddressField(attrs={'placeholder':'IP address(Camera 3)'})
+    amount_of_cameras = forms.ChoiceField(choices=Choices)
+    ip_address_1 = forms.GenericIPAddressField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Enter IP Address 1'}))
+    ip_address_2 = forms.GenericIPAddressField(widget=forms.TextInput(attrs={'placeholder': 'Enter IP Address 2'}))
+    ip_address_3 = forms.GenericIPAddressField(widget=forms.TextInput(attrs={'placeholder': 'Enter IP Address '}))
 
 
 class AnimalType(forms.Form):
     Choices = (
+        ('','Type of Animal'),
         ('pig','Pig'),
         ('sheep','Sheep'),
         ('goat','Goat'),
@@ -53,8 +55,8 @@ class AnimalType(forms.Form):
         ('cow','Cow')
 
     )
-    type_of_animal = forms.ChoiceField(choices=Choices,attrs={'placeholder':'Type of Animal'})
-    animal_1 = forms.CharField(attrs={'placeholder':'Animal to monitor with camera 1'},required=True)
-    animal_2 = forms.CharField(attrs={'placeholder':'Animal to monitor with camera 2'})
-    animal_3 = forms.CharField(attrs={'placeholder':'Animals to monitor with camera 3'})
+    type_of_animal = forms.ChoiceField(choices=Choices)
+    animal_1 = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Enter Animal 1'}),required=True)
+    animal_2 = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Enter Animal 2'}))
+    animal_3 = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Enter Animal 3'}))
 

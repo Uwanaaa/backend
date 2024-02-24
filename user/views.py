@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
 from . import forms
+from settings.views import profile
+import requests 
 
 # Create your views here.
 def signup(request):
@@ -19,8 +21,16 @@ def signup(request):
 
          user = authenticate(request,email=email,password=password)
          login(request,user)
+         data = {
+             'first_name':user.first_name,
+             'last_name': user.last_name,
+             'email': user.email,
+             'mobile_number': user.mobile_number,
+             'password': user.password
+             }
+         requests.post('http://localhost:8000/settings/profile',json=data)
          messages.success(request,"Logged in Successfully")
-         return redirect('/home')
+         return render(request,'user/redirect.html')
     else:
           form = forms.CreateUser()
 
@@ -38,7 +48,8 @@ def login_user(request):
 
          if user is not None:
             login(request,user)
-            return redirect('/home')
+            profile(request,user)
+            return redirect('/settings/profile')
          else :
             messages.error(request,'User does not exist')
     else:
@@ -108,8 +119,6 @@ def farm_monitor(request):
 def data_manager(request):
     pass
 
-def settings(request):
-    pass
 
 def dashboard(request):
     pass

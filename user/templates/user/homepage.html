@@ -39,7 +39,7 @@
      {% endif %}
 
 
-     {% if request.path == '/forgot-password %}
+     {% if request.path == '/forgot-password' %}
      {% csrf_token %}
      {% if message %}
      {% for message in messages %}
