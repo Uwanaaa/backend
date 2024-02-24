@@ -37,6 +37,17 @@
      {% endif %}
      {{form.as_p}}
      {% endif %}
+
+
+     {% if request.path == '/forgot-password %}
+     {% csrf_token %}
+     {% if message %}
+     {% for message in messages %}
+     {{ message }}
+     {% endfor %}
+     {% endif %}
+     {{ form.as_p }}
+     {% endif %}
      <input type="submit" value="Submit">
     </form>
   </body>

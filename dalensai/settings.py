@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user',
-    'home'
 ]
 
 MIDDLEWARE = [
@@ -115,6 +114,8 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backend.filebased.EmailBackend'
+EMAIL_FILE_PATH = BASE_DIR/'mails'
 #LOGIN_REDIRECT_URL = '/home'
 #LOGOUT_REDIRECT_URL = '/logout'
 
