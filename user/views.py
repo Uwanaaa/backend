@@ -6,7 +6,10 @@ from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
 from . import forms
 from settings.views import profile
-import requests 
+from rest_framework.decorators import api_view
+from rest_framework import viewsets
+from .serializers import UserModelSerializer
+from .models import UserModel
 
 # Create your views here.
 def signup(request):
@@ -21,15 +24,9 @@ def signup(request):
 
          user = authenticate(request,email=email,password=password)
          login(request,user)
-         data = {
-             'first_name':user.first_name,
-             'last_name': user.last_name,
-             'email': user.email,
-             'mobile_number': user.mobile_number,
-             'password': user.password
-             }
-         requests.post('http://localhost:8000/settings/profile',json=data)
          messages.success(request,"Logged in Successfully")
+         request.session['user_id'] = user.id
+         request.session['password'] = request.POST['password']
          return render(request,'user/redirect.html')
     else:
           form = forms.CreateUser()
@@ -80,19 +77,25 @@ def forgot_password(request):
     return render(request,'user/homepage.html',{'form':form})
 
 
+@api_view(['GET','POST'])
 def setup_camera(request):
 
     if request.method == 'POST':
         form = forms.SetupCamera(request.POST)
+        print("Data recieved")
 
         if form.is_valid():
             HttpResponse(form.cleaned_data)
+            print(form.cleaned_data)
         else:
             messages.error(request,'Input is invalid')
     else:
         form = forms.SetupCamera()
     
-    return render(request,'user/setup.html',{'form':form})
+    return HttpResponse('Connected to the server')
+    #return render(request,'user/setup.html',{'form':form})
+
+
 
 def animal_setup(request):
 
