@@ -55,7 +55,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    '<http://localhost:5173>'
+    'http://localhost:5173'
 ]
 CORS_ALLOW_ALL_HEADERS = True
 CORS_ALLOW_METHODS = (
@@ -66,6 +66,7 @@ CORS_ALLOW_METHODS = (
     "POST",
     "PUT",
 )
+
 
 ROOT_URLCONF = 'dalensai.urls'
 

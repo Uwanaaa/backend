@@ -10,36 +10,44 @@ from rest_framework.decorators import api_view
 from rest_framework import viewsets
 from .serializers import UserModelSerializer
 from .models import UserModel
+import json
 
 # Create your views here.
+@api_view(['GET','POST'])
 def signup(request):
 
     if request.method == 'POST':
-        form = forms.CreateUser(request.POST)
+        input_data = json.loads(request.body.decode('utf-8'))
+        form = forms.CreateUser(input_data)
+        print(input_data)
 
         if form.is_valid():
          form.save()
-         email = form.cleaned_data['email']
+         print(form.cleaned_data)
          password = form.cleaned_data['password1']
+         email = form.cleaned_data['email']
 
          user = authenticate(request,email=email,password=password)
          login(request,user)
-         messages.success(request,"Logged in Successfully")
+         HttpResponse(request,"Logged in Successfully")
          request.session['user_id'] = user.id
          request.session['password'] = request.POST['password']
          return render(request,'user/redirect.html')
+        else:
+            print(form.errors)
     else:
           form = forms.CreateUser()
 
     return render(request,"user/homepage.html",{'form':form})
 
-
+@api_view(['GET','POST'])
 def login_user(request):
     form = forms.LoginUser()
 
-    if request.POST:
-         email = request.POST['username']
-         password = request.POST['password']
+    if request.method == 'POST':
+         input_data = json.loads(request.body.decode('utf-8'))
+         email = input_data['username']
+         password = input_data['password']
 
          user = authenticate(request,email=email,pasword=password)
 
@@ -48,11 +56,11 @@ def login_user(request):
             profile(request,user)
             return redirect('/settings/profile')
          else :
-            messages.error(request,'User does not exist')
+            HttpResponse(request,'User does not exist')
     else:
           form = forms.LoginUser()
 
-    return render(request,"user/homepage.html",{'form':form})
+    return HttpResponse("This the login page")
     
 
 
@@ -81,14 +89,15 @@ def forgot_password(request):
 def setup_camera(request):
 
     if request.method == 'POST':
-        form = forms.SetupCamera(request.POST)
-        print("Data recieved")
+        input_data = json.loads(request.body.decode('utf-8'))
+        form = forms.SetupCamera(input_data)
+        
 
         if form.is_valid():
             HttpResponse(form.cleaned_data)
             print(form.cleaned_data)
         else:
-            messages.error(request,'Input is invalid')
+            return HttpResponse('Input data is invalid')
     else:
         form = forms.SetupCamera()
     
