@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,7 +42,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'user',
     'settings',
-    'corsheaders'
+    'corsheaders',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google'
 ]
 
 MIDDLEWARE = [
@@ -51,11 +57,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
+    'corsheaders.middleware.CorsMiddleware',
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:5173'
+    'http://localhost:5174'
 ]
 CORS_ALLOW_ALL_HEADERS = True
 CORS_ALLOW_METHODS = (
@@ -67,8 +74,16 @@ CORS_ALLOW_METHODS = (
     "PUT",
 )
 
+REST_FRAMEWORK = {'DEFAULT_PERMINSSION_CLASSES' : [
+    'rest_framework.permission.AllowAny'
+]}
 
 ROOT_URLCONF = 'dalensai.urls'
+
+CSRF_COOKIE_SAMESITE = 'Strict'
+SESSION_COOKIE_SAMESITE = 'Strict'
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = True
 
 LOGIN_REDIRECT_URL = '/home'
 #LOGOUT_REDIRECT_URL = 'homepage'
@@ -129,13 +144,34 @@ AUTH_USER_MODEL = 'user.UserModel'
 
 AUTHENTICATION_BACKENDS = [
     'user.backends.UserBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+load_dotenv()
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE' : [
+            'profile',
+            'email'
+        ],
+        'APP': {
+            'client_id': os.environ['CLIENT_ID'],
+            'secret': os.environ['CLIENT_SECRET'],
+        },
+        'AUTH_PARAMS': {
+            'access_type':'online',
+        }
+    }
+}
+
+SITE_ID = 2
+
 EMAIL_BACKEND = 'django.core.mail.backend.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR/'mails'
-#LOGIN_REDIRECT_URL = '/home'
-#LOGOUT_REDIRECT_URL = '/logout'
+LOGIN_REDIRECT_URL = '/home'
+LOGOUT_REDIRECT_URL = '/logout'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
