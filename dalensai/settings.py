@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,7 +47,9 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google'
+    'allauth.socialaccount.providers.google',
+    'djoser',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -75,8 +78,12 @@ CORS_ALLOW_METHODS = (
 )
 
 REST_FRAMEWORK = {'DEFAULT_PERMINSSION_CLASSES' : [
-    'rest_framework.permission.AllowAny'
-]}
+    'rest_framework.permission.AllowAny',
+],
+'DEFAULT_AUTHENTICATION_CLASSES': [
+     'rest_framework_simplejwt.authentication.JWTAuthentication'
+]
+}
 
 ROOT_URLCONF = 'dalensai.urls'
 
@@ -168,10 +175,50 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SITE_ID = 2
 
-EMAIL_BACKEND = 'django.core.mail.backend.filebased.EmailBackend'
-EMAIL_FILE_PATH = BASE_DIR/'mails'
+EMAIL_BACKEND = 'django.core.mail.backend.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST= os.environ['EMAIL_HOST']
+EMAIL_HOST_USER= os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD= os.environ['EMAIL_HOST_PASSWORD']
+EMAIL_PORT= os.environ['EMAIL_PORT']
+DEFAULT_FROM_EMAIL = "@info-dalensai.com"
+DOMAIN = os.environ['DOMAIN']
+
+SITE_NAME = "DalensAI"
+
+
+
 LOGIN_REDIRECT_URL = '/home'
 LOGOUT_REDIRECT_URL = '/logout'
+
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES":(
+        "Bearer",
+        "JWT"
+    ),
+    "ACCESS_TOKEN_LIFETIME" : timedelta(minutes=140),
+    "REFRESH_TOKEN_LIFETIME" : timedelta(days=30),
+    "SIGNING_KEY": os.environ["SIGNING_KEY"],
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken")
+}
+
+DJOSER = {
+    'LOGIN_FIELD':'email',
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    'PASSWORD_RESET_CONFIRM_URL': True,
+    'SET_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_PASSWORD_RETYPE': True,
+    'SEND_CONFIRMATION_EMAIL': True,
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SERIALIZERS': {
+        'user_create': 'user.serializers.UserModelSerializer',
+        'user': 'user.serializers.UserModelSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer'
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

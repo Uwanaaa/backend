@@ -12,6 +12,7 @@ class CreateUser(UserCreationForm):
      class Meta:
         model = UserModel
         fields = ('first_name','last_name','email','mobile_number')
+        error_class = "error"
 
 # - Form to login a user
 class LoginUser(AuthenticationForm):
@@ -26,6 +27,7 @@ class ChangeDetails(UserChangeForm):
     class Meta:
         model = UserModel
         fields = ('first_name','last_name','email','password','mobile_number')
+        error_class = "error"
 
 
 class ForgotPassword(PasswordResetForm):

@@ -1,8 +1,10 @@
-from .models import UserModel
-from rest_framework import serializers
+from django.contrib.auth import get_user_model
+from djoser.serializers import UserCreateSerializer
 
 
-class UserModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserModel
-        fields = '__all__'
+usermodel = get_user_model()
+
+class UserModelSerializer(UserCreateSerializer):
+    class Meta(UserCreateSerializer.Meta):
+        model = usermodel
+        fields = ['id','email','first_name','last_name','password','mobile_number']

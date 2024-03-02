@@ -8,10 +8,12 @@ from rest_framework import serializers
 class UserModel(AbstractUser):
     username = None
     email = models.EmailField(_("Email"),unique=True)
-    mobile_number = models.CharField(_("Enter your phone number"))
+    mobile_number = models.CharField(_("Phone number"))
+    first_name = models.CharField(_("First Name"))
+    last_name = models.CharField(_("Last name"))
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ["first_name","last_name","mobile_number"]
 
     objects = UserManager()
 
