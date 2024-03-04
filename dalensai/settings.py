@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
+    #'allauth.socialaccount.providers.google',
     'djoser',
     'rest_framework_simplejwt',
 ]
@@ -77,13 +77,12 @@ CORS_ALLOW_METHODS = (
     "PUT",
 )
 
-REST_FRAMEWORK = {'DEFAULT_PERMINSSION_CLASSES' : [
-    'rest_framework.permission.AllowAny',
-],
-'DEFAULT_AUTHENTICATION_CLASSES': [
-     'rest_framework_simplejwt.authentication.JWTAuthentication'
-]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
+
 
 ROOT_URLCONF = 'dalensai.urls'
 
@@ -122,9 +121,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD':'BaAdFGdgA2acCfcb1cb2165*-*D624Bf',
+        'PASSWORD':'AaGff16EAg2d1gcec53FG*B6f6-DdC11',
         'HOST': 'monorail.proxy.rlwy.net',
-        'PORT': '56269'
+        'PORT': '12819'
     }
 }
 
@@ -175,15 +174,14 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SITE_ID = 2
 
-EMAIL_BACKEND = 'django.core.mail.backend.smtp.EmailBackend'
-EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = False #True
 EMAIL_HOST= os.environ['EMAIL_HOST']
 EMAIL_HOST_USER= os.environ['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD= os.environ['EMAIL_HOST_PASSWORD']
 EMAIL_PORT= os.environ['EMAIL_PORT']
-DEFAULT_FROM_EMAIL = "@info-dalensai.com"
+DEFAULT_FROM_EMAIL = "info@dalensai.com"
 DOMAIN = os.environ['DOMAIN']
-
 SITE_NAME = "DalensAI"
 
 
@@ -192,9 +190,8 @@ LOGIN_REDIRECT_URL = '/home'
 LOGOUT_REDIRECT_URL = '/logout'
 
 SIMPLE_JWT = {
-    "AUTH_HEADER_TYPES":(
-        "Bearer",
-        "JWT"
+    "AUTH_HEADER_TYPES": (
+        "JWT",
     ),
     "ACCESS_TOKEN_LIFETIME" : timedelta(minutes=140),
     "REFRESH_TOKEN_LIFETIME" : timedelta(days=30),

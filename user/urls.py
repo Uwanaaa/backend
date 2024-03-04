@@ -8,6 +8,6 @@ urlpatterns = [
     path('home',views.homepage,name='home'),
     path('setup-camera',views.setup_camera,name='setup-camera'),
     path('setup-animal',views.animal_setup,name='setup_animal'),
-    path('google-auth',views.google_auth,name='google_auth'),
-    path('authenticated',views.authenticated,name='authenticated')
+    #path('google-auth',views.google_auth,name='google_auth'),
+    #path('authenticated',views.authenticated,name='authenticated')
 ]

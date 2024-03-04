@@ -2,6 +2,9 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+import re
+
+EMAIL_REGEX = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
 
 class UserManager(BaseUserManager):
     """
@@ -11,7 +14,8 @@ class UserManager(BaseUserManager):
 
     def email_validate(self,email):
        try:
-           validate_email(email)
+           re.match(EMAIL_REGEX,email)
+           return email
        except ValidationError:
            raise ValueError(_("Provide a valid email address"))
         
@@ -32,7 +36,7 @@ class UserManager(BaseUserManager):
         
         if email:
           email = self.normalize_email(email)
-          self.email_validate(email)
+          email= self.email_validate(email)
         else:
             raise ValueError(_("Email address should be provided"))
 
@@ -44,14 +48,15 @@ class UserManager(BaseUserManager):
             mobile_number = mobile_number,
             **extra_fields)
         
+        user.set_password(password)
         extra_fields.setdefault("is_staff",False)
         extra_fields.setdefault("is_superuser",False)
         
-        user.set_password(password)
+        
         user.save()
         return user
 
-    def create_superuser(self, email, password, mobile_number, **extra_fields):
+    def create_superuser(self, first_name, last_name, email, password, mobile_number, **extra_fields):
         """
         Create and save a SuperUser with the given email and password.
         """
@@ -59,8 +64,9 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
 
+    
         if extra_fields.get("is_staff") is not True:
             raise ValueError(_("Superuser must have is_staff=True."))
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
-        return self.create_user(email, password, mobile_number, **extra_fields)
+        return self.create_user(first_name, last_name, email, password, mobile_number, **extra_fields)

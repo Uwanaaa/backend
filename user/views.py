@@ -4,7 +4,7 @@ from django.http import JsonResponse,HttpResponse
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
-from allauth.socialaccount.models import SocialAccount
+#from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.decorators import login_required
 from settings.views import profile
 from rest_framework.decorators import api_view
@@ -91,16 +91,16 @@ def login_user(request):
 
         
     
-@api_view(['GET'])
-def google_auth(request):
+#@api_view(['GET'])
+#def google_auth(request):
     load_dotenv()
     redirect_uri = request.build_absolute_uri('/auth/google/callback/')
     client_id = os.environ['CLIENT_ID']
     auth_url = f'https://accounts.google.com/o/oauth2/auth?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code&scope=email%20profile'  # Google OAuth URL
     return redirect(auth_url)
 
-@api_view(['GET'])
-def authenticated(request):
+#@api_view(['GET'])
+#def authenticated(request):
     token = request.POST['credential']
 
     try:
