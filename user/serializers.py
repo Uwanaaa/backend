@@ -8,3 +8,4 @@ class UserModelSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = usermodel
         fields = ['id','email','first_name','last_name','password','mobile_number']
+

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Feed</title>
+    {% load static %}
+  </head>
+  <body>
+    <video id="media" width="700" height="500" autoplay></video>
+    <select id="name">
+      <option value="Chicken">Chicken</option>
+      <option value="Cow">Cow</option>
+      <option value="Goat">Goat</option>
+      <option value="Sheep">Sheep</option>
+      <option value="Pig">Pig</option>
+    </select>
+    <button type="submit" id="submit" onclick="open_cam()">Submit</button>
+
+    <script async src="{% static 'dist/opencv.js' %}" onload="openCvReady()"></script>
+    <script>
+      
+      const media = document.getElementById("media");
+      const imageOutput = document.getElementById('imageOutput')
+
+      //Accessing webcam
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((videoStream) => {
+          media.srcObject = videoStream;
+        })
+        .catch((err) => {
+          console.error("An error occured. Please retry caputring");
+        });
+
+        //Starting up the websocket connection
+        const socket = new WebSocket('ws://127.0.0.1:8000/feed/')
+
+      //Sending the clicken option to the backend
+      const submit = document.getElementById('submit')
+      const option = document.getElementById('name').value
+
+      media.addEventListener('play',() => {
+        const frame = document.createElement('canvas')
+        const context = frame.getContext('2d')
+        setInterval(() => {
+          context.drawImage(media,0,0,640,480)
+          const data = context.getImageData(0,0,640,480)
+          socket.send(JSON.stringify({"data":data}))
+      },1000/30)
+      
+      
+      /*
+      socket.onopen = () => {
+          let capture = cv.VideoCapture(0)
+        capture.set(3,640)
+        capture.set(4,480)
+
+        while (capture.isOpened()){
+            let { ret,img } = capture.read()
+            cv2.imshow('Client',img)
+            let buffer = cv2.imencode('.jpg',img,[int(cv2.IMWRITE_JPEG_QUALITY),30])
+            let img_as_bytes = pickle.dumps(buffer)
+            socket.send(img_as_bytes)
+        }
+          //socket.send(JSON.stringify({selectedAnimal: option}))
+        }*/
+      })
+
+        //When the video plays
+      media.addEventListener('play',() => {
+        setInterval(() => {
+            const frame = document.createElement('canvas')
+            const context = frame.context('2d')
+
+            //Generate image data
+        const imageData = frame.toDataURL("image/png");
+        socket.onopen = () => {
+            socket.send('Connection established')
+            socket.send(JSON.stringify({imageData: imageData}))
+        }
+        },60)
+      }) 
+      socket.onmessage()
+
+       
+    </script>
+  </body>
+</html>

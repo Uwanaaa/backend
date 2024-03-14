@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'user',
+    'home',
+    'model',
     'settings',
     'corsheaders',
     'allauth',
@@ -50,6 +52,7 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.google',
     'djoser',
     'rest_framework_simplejwt',
+    'whitenoise.runserver_nostatic'
 ]
 
 MIDDLEWARE = [
@@ -60,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'allauth.account.middleware.AccountMiddleware'
 ]
@@ -76,6 +80,11 @@ CORS_ALLOW_METHODS = (
     "POST",
     "PUT",
 )
+
+CORS_ALLOW_ORIGINS = [
+    'http://localhost:5174',
+    
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -150,8 +159,9 @@ AUTH_USER_MODEL = 'user.UserModel'
 
 AUTHENTICATION_BACKENDS = [
     'user.backends.UserBackend',
-    'allauth.account.auth_backends.AuthenticationBackend'
     'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+ 
 ]
 
 load_dotenv()
@@ -232,7 +242,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+STATIC_ROOT = BASE_DIR/'static'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

@@ -51,8 +51,6 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         extra_fields.setdefault("is_staff",False)
         extra_fields.setdefault("is_superuser",False)
-        
-        
         user.save()
         return user
 
@@ -62,7 +60,7 @@ class UserManager(BaseUserManager):
         """
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault("is_active", True)
+        extra_fields.setdefault("is_active",True)
 
     
         if extra_fields.get("is_staff") is not True:
